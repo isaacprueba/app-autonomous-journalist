@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package news.v1;
 
-option go_package = "github.com/isaacprueba/app-autonomous-journalist/contracts/proto/news/v1;newsv1";
+option go_package = "github.com/autonomous-journalist/contracts/proto/news/v1;newsv1";
 
 message RequestContext {
   string tenant_id = 1;
