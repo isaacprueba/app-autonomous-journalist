@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: Autonomous Journalist API
+  version: 1.0.0
+  description: API pública para gestión de noticias, taxonomías y búsqueda.
+servers:
+  - url: https://api.example.com
+    description: Producción
+  - url: https://sandbox.api.example.com
+    description: Sandbox
+security:
+  - OAuth2: ["news.read", "news.write", "admin"]
+  - ApiKeyAuth: []
+paths:
+  /v1/news:
+    get:
+      summary: Listar noticias
+      tags: [News]
+      parameters:
+        - $ref: '#/components/parameters/XTenantId'
+        - $ref: '#/components/parameters/XRequestId'
+        - name: q
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+          headers:
+            X-RateLimit-Remaining:
+              schema: { type: integer }
+            X-RateLimit-Reset:
+              schema: { type: integer }
+        '401': { description: Unauthorized }
+    post:
+      summary: Crear noticia
+      tags: [News]
+      parameters:
+        - $ref: '#/components/parameters/XTenantId'
+        - $ref: '#/components/parameters/XRequestId'
+        - $ref: '#/components/parameters/XIdempotencyKey'
+      responses:
+        '201': { description: Created }
+        '400': { description: Bad Request }
+  /v1/news/{newsId}:
+    get:
+      summary: Obtener noticia
+      tags: [News]
+      parameters:
+        - $ref: '#/components/parameters/XTenantId'
+        - $ref: '#/components/parameters/XRequestId'
+        - name: newsId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+        '404': { description: Not Found }
+components:
+  parameters:
+    XTenantId:
+      name: X-Tenant-Id
+      in: header
+      required: true
+      schema: { type: string }
+    XRequestId:
+      name: X-Request-Id
+      in: header
+      required: true
+      schema: { type: string }
+    XIdempotencyKey:
+      name: X-Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string }
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.example.com/oauth/authorize
+          tokenUrl: https://auth.example.com/oauth/token
+          scopes:
+            news.read: Lectura de noticias
+            news.write: Escritura de noticias
+            admin: Administración
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
