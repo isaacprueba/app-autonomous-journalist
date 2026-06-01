@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package news.v1;
+
+option go_package = "github.com/autonomous-journalist/contracts/proto/news/v1;newsv1";
+
+message RequestContext {
+  string tenant_id = 1;
+  string request_id = 2;
+  string actor_id = 3;
+}
+
+message NewsItem {
+  string id = 1;
+  string title = 2;
+  string summary = 3;
+  string language = 4;
+  string status = 5;
+}
+
+message CreateNewsRequest {
+  RequestContext ctx = 1;
+  NewsItem item = 2;
+}
+
+message CreateNewsResponse {
+  NewsItem item = 1;
+}
+
+message ListNewsRequest {
+  RequestContext ctx = 1;
+  string query = 2;
+}
+
+message ListNewsResponse {
+  repeated NewsItem items = 1;
+}
+
+service NewsService {
+  rpc CreateNews (CreateNewsRequest) returns (CreateNewsResponse);
+  rpc ListNews (ListNewsRequest) returns (ListNewsResponse);
+}

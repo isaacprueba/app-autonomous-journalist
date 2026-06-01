@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "NewsCreatedV1",
+  "type": "object",
+  "required": ["event_id", "occurred_at", "tenant_id", "news"],
+  "properties": {
+    "event_id": { "type": "string" },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "tenant_id": { "type": "string" },
+    "news": {
+      "type": "object",
+      "required": ["id", "title", "language", "status"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "language": { "type": "string" },
+        "status": { "type": "string" }
+      }
+    }
+  }
+}
